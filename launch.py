@@ -12,11 +12,7 @@ from math import *
 def download_img(url, img_id):
 	response = requests.get(url)
 	open("input/" + img_id + ".png", "wb").write(response.content);
-	return os.path.join(args.input_path, img_id + ".png"); 
-
-
-
-
+	return os.path.join(args.input_path, img_id + ".png");
 
 def crop_image(path_img, path_background, image_name):
 	cropped_path = os.path.join(args.output_path, "cropped/" +  image_name + ".png") 
@@ -39,26 +35,12 @@ def adjust_image(cropped_img_path, background_img_path, image_name):
 	background_width = background_img.width
 	background_height = background_img.height
 
-	print("background_width : " + str(background_width))
-	print("background_height : " + str(background_height))
-	print("cropped_width : " + str(cropped_width))
-	print("cropped_height : " + str(cropped_height))
-
-	print("max height : " +  str(ceil(background_height/2)))
-	print("max width : " +  str(ceil(background_width/2)))
 
 	if cropped_width > (background_width/2) or cropped_height > (background_height/2):
-		print("icici")
 		if cropped_width > (background_width/3):
-			print("la1")
 			cropped_img.thumbnail((ceil(background_width/2) ,ceil(background_width/2)),Image.ANTIALIAS)
-			print("after cropped_width : " + str(cropped_img.width))
-			print("after cropped_height : " + str(cropped_img.height))
 		else:
-			print("la2")
 			cropped_img.thumbnail((ceil(background_height/2) ,ceil(background_height/2)),Image.ANTIALIAS)
-			print("after cropped_width : " + str(cropped_img.width))
-			print("after cropped_height : " + str(cropped_img.height))
 		cropped_img.save(adjusted_path);
 
 		return os.path.join(adjusted_path);
@@ -66,10 +48,7 @@ def adjust_image(cropped_img_path, background_img_path, image_name):
 		return cropped_img_path; 
 
 def enhance_img(cropped_img, image_name):
-	print("enhance_img here")
 	enhance_path = os.path.join(args.output_path,  image_name + ".png")
-	print(cropped_img)
-	print(image_name)
 	contrast = ImageEnhance.Contrast(cropped_img)
 	contrast.enhance(1.5).save(enhance_path)
 	cropped_img = Image.open(enhance_path)
@@ -93,7 +72,7 @@ def treat_image(img_config):
 	# crop image and adjust it to background
 	path_tmp_cropped_img = crop_image(img_config["output_path"], img_config["background"], img_config["id"])
 	path_pasted_background_img = fuse_background(path_tmp_cropped_img, os.path.join(args.background_path, img_config["background"] + ".png"), img_config["id"])
-
+	os.system("python3 /home/optionizr/stable-diffusion/scripts/img2img.py --prompt " + img_config["final_img_description"] + " --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
 	remove_tmp_files(img_config);
 
 # def compute_imgs():
