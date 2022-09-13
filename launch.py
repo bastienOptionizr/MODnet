@@ -72,7 +72,8 @@ def treat_image(img_config):
 	# crop image and adjust it to background
 	path_tmp_cropped_img = crop_image(img_config["output_path"], img_config["background"], img_config["id"])
 	path_pasted_background_img = fuse_background(path_tmp_cropped_img, os.path.join(args.background_path, img_config["background"] + ".png"), img_config["id"])
-	os.system("python3 /home/optionizr/stable-diffusion/scripts/img2img.py --prompt " + img_config["final_img_description"] + " --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
+	print("python3 /home/optionizr/stable-diffusion/scripts/img2img.py --prompt '" + img_config["final_img_description"] + "' --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
+	# os.system("python3 /home/optionizr/stable-diffusion/scripts/img2img.py --prompt '" + img_config["final_img_description"] + "' --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
 	remove_tmp_files(img_config);
 
 # def compute_imgs():
