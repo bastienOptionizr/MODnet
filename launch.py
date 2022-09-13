@@ -115,11 +115,17 @@ if not os.path.exists(args.output_path):
 
 list_img = []
 
+input_path = args.input_path
 cropped_path = os.path.join(args.output_path, "cropped")
 adjusted_path = os.path.join(args.output_path, "adjusted")
 adjusted_path = os.path.join(args.output_path, "enhanced")
 
 # Check whether the specified path exists or not
+isExist = os.path.exists(input_path)
+
+if not isExist:  
+  os.makedirs(input_path)
+
 isExist = os.path.exists(cropped_path)
 
 if not isExist:  
