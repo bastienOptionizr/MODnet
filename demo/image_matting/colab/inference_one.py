@@ -15,21 +15,17 @@ from src.models.modnet import MODNet
 if __name__ == '__main__':
     # define cmd arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input-path', type=str, help='path of input images')
     parser.add_argument('--output-path', type=str, help='path of output images')
     parser.add_argument('--img-path', type=str, help='path of the image')
     parser.add_argument('--ckpt-path', type=str, help='path of pre-trained MODNet')
     args = parser.parse_args()
 
     # check input arguments
-    if not os.path.exists(args.input_path):
-        print('Cannot find input path: {0}'.format(args.input_path))
-        exit()
     if not os.path.exists(args.output_path):
         print('Cannot find output path: {0}'.format(args.output_path))
         exit()
     if not os.path.exists(args.img_path):
-        print('Cannot find output path: {0}'.format(args.img_path))
+        print('Cannot find img path: {0}'.format(args.img_path))
         exit()
     if not os.path.exists(args.ckpt_path):
         print('Cannot find ckpt path: {0}'.format(args.ckpt_path))
@@ -59,54 +55,53 @@ if __name__ == '__main__':
     modnet.eval()
 
     # inference images
-    im_names = os.listdir(args.input_path)
-    for im_name in im_names:
-        print('Process image: {0}'.format(im_name))
+    im_name = args.img_path
+    print('Process image: {0}'.format(im_name))
 
-        # read image
-        im = Image.open(os.path.join(args.input_path, im_name))
+    # read image
+    im = Image.open(im_name)
 
-        # unify image channels to 3
-        im = np.asarray(im)
-        if len(im.shape) == 2:
-            im = im[:, :, None]
-        if im.shape[2] == 1:
-            im = np.repeat(im, 3, axis=2)
-        elif im.shape[2] == 4:
-            im = im[:, :, 0:3]
+    # unify image channels to 3
+    im = np.asarray(im)
+    if len(im.shape) == 2:
+        im = im[:, :, None]
+    if im.shape[2] == 1:
+        im = np.repeat(im, 3, axis=2)
+    elif im.shape[2] == 4:
+        im = im[:, :, 0:3]
 
-        # convert image to PyTorch tensor
-        im = Image.fromarray(im)
-        im = im_transform(im)
+    # convert image to PyTorch tensor
+    im = Image.fromarray(im)
+    im = im_transform(im)
 
-        # add mini-batch dim
-        im = im[None, :, :, :]
+    # add mini-batch dim
+    im = im[None, :, :, :]
 
-        # resize image for input
-        im_b, im_c, im_h, im_w = im.shape
-        if max(im_h, im_w) < ref_size or min(im_h, im_w) > ref_size:
-            if im_w >= im_h:
-                im_rh = ref_size
-                im_rw = int(im_w / im_h * ref_size)
-            elif im_w < im_h:
-                im_rw = ref_size
-                im_rh = int(im_h / im_w * ref_size)
-        else:
-            im_rh = im_h
-            im_rw = im_w
-        
-        im_rw = im_rw - im_rw % 32
-        im_rh = im_rh - im_rh % 32
-        im = F.interpolate(im, size=(im_rh, im_rw), mode='area')
+    # resize image for input
+    im_b, im_c, im_h, im_w = im.shape
+    if max(im_h, im_w) < ref_size or min(im_h, im_w) > ref_size:
+        if im_w >= im_h:
+            im_rh = ref_size
+            im_rw = int(im_w / im_h * ref_size)
+        elif im_w < im_h:
+            im_rw = ref_size
+            im_rh = int(im_h / im_w * ref_size)
+    else:
+        im_rh = im_h
+        im_rw = im_w
+    
+    im_rw = im_rw - im_rw % 32
+    im_rh = im_rh - im_rh % 32
+    im = F.interpolate(im, size=(im_rh, im_rw), mode='area')
 
-        # inference
-        _, _, matte = modnet(im.cuda() if torch.cuda.is_available() else im, True)
+    # inference
+    _, _, matte = modnet(im.cuda() if torch.cuda.is_available() else im, True)
 
-        # resize and save matte
-        matte = F.interpolate(matte, size=(im_h, im_w), mode='area')
-        matte = matte[0][0].data.cpu().numpy()
-        matte_name = im_name.split('.')[0] + '.png'
-        Image.fromarray(((matte * 255).astype('uint8')), mode='L').save(os.path.join(args.output_path, matte_name))
+    # resize and save matte
+    matte = F.interpolate(matte, size=(im_h, im_w), mode='area')
+    matte = matte[0][0].data.cpu().numpy()
+    matte_name = args.output_path
+    Image.fromarray(((matte * 255).astype('uint8')), mode='L').save(args.output_path)
     import numpy as np
     from PIL import Image
 
@@ -127,7 +122,7 @@ if __name__ == '__main__':
                 if pixdata[x, y] == (255, 255, 255, 255):
                     pixdata[x, y] = (255, 255, 255, 0)
 
-        img.save(os.path.join(args.output_path, image_name.split('.')[0]) + ".png", "PNG")
+        img.save(args.output_path, "PNG")
     
     # def color_to_alpha_mask(im, alpha_color):
     #     mask = (im[..., :3] == alpha_color).all(axis=2)
@@ -160,12 +155,13 @@ if __name__ == '__main__':
 
     # visualize all images
     image_name = args.img_path
-    matte_name = image_name.split('.')[0] + '.png'
-    image = Image.open(os.path.join(args.input_path, image_name))
+    matte_name = args.output_path
+    print(matte_name)
+    image = Image.open(image_name)
     matte = Image.open(os.path.join(args.output_path, matte_name))
     image = combined_display(image, matte)
-    image.save(os.path.join(args.output_path, image_name.split('.')[0] + '.png'))
-    transparent(os.path.join(args.output_path, image_name.split('.')[0] + '.png'), image_name.split('.')[0] + ".png")
+    image.save(args.output_path)
+    transparent(args.output_path, image_name.replace("input/").split('.')[0] + ".png")
       # target_color = (0, 0, 0)
       # im = plt.imread(os.path.join(args.output_path, "combined_"+ image_name.split('.')[0] + '.png'))
       # im_rgba = color_to_alpha_mask(im, target_color)
