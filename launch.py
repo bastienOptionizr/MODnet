@@ -114,6 +114,30 @@ if not os.path.exists(args.output_path):
     exit()
 
 list_img = []
+
+cropped_path = os.path.join(args.output_path, "cropped")
+adjusted_path = os.path.join(args.output_path, "adjusted")
+adjusted_path = os.path.join(args.output_path, "enhanced")
+
+# Check whether the specified path exists or not
+isExist = os.path.exists(cropped_path)
+
+if not isExist:  
+  os.makedirs(cropped_path)
+
+
+# Check whether the specified path exists or not
+isExist = os.path.exists(adjusted_path)
+
+if not isExist:  
+  os.makedirs(adjusted_path)
+
+# Check whether the specified path exists or not
+isExist = os.path.exists(enhanced_path)
+
+if not isExist:  
+  os.makedirs(enhanced_path)
+
 with open('todo.txt') as f:
     lines = [line for line in f]
     for line in lines:
