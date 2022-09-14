@@ -164,7 +164,7 @@ with open('todo.txt') as f:
 	    		"email": 					email,
 	    		"final_img_description": 	final_img_description,
 	    		"crop": 					crop_module,
-	    		"model": 					float(model),
+	    		"model": 					model,
 	    	};
 
 
