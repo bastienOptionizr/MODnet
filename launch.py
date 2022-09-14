@@ -74,7 +74,7 @@ def treat_image(img_config):
 	path_pasted_background_img = fuse_background(path_tmp_cropped_img, os.path.join(args.background_path, img_config["background"] + ".png"), img_config["id"])
 	# print(img_config["final_img_description"])
 	# print("cd ../stable-diffusion ; python3 /home/optionizr/stable-diffusion/scripts/img2img.py --prompt '" + img_config["final_img_description"] + "' --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
-	os.system("cd ../stable-diffusion ; python3 /home/optionizr/stable-diffusion/scripts/img2img.py --prompt '" + img_config["final_img_description"] + "' --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
+	os.system("cd ../stable-diffusion ; python3 /home/optionizr/stable-diffusion/scripts/img2img.py --ckpt 'model_" + img_config["model"] + ".ckpt' --prompt '" + img_config["final_img_description"] + "' --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
 	remove_tmp_files(img_config);
 
 # def compute_imgs():
@@ -148,21 +148,23 @@ with open('todo.txt') as f:
     lines = [line for line in f]
     for line in lines:
     	line_tab=line.split(" | ")
-    	if len(line_tab) > 5:
+    	if len(line_tab) > 6:
 	    	img_id=line_tab[0]
 	    	img_url=line_tab[1]
 	    	background_img=line_tab[2]
 	    	email=line_tab[3]
 	    	final_img_description=line_tab[4]
 	    	crop_module = line_tab[5]
+	    	model = line_tab[6]
 
 	    	img_config = {
-	    		"id": 					img_id,
-	    		"url": 					img_url,
-	    		"background": 			background_img,
+	    		"id": 						img_id + "_" + model,
+	    		"url": 						img_url,
+	    		"background": 				background_img,
 	    		"email": 					email,
 	    		"final_img_description": 	final_img_description,
-	    		"crop": 					crop_module
+	    		"crop": 					crop_module,
+	    		"model": 					float(model),
 	    	};
 
 
