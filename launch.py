@@ -74,7 +74,7 @@ def treat_image(img_config):
 	path_pasted_background_img = fuse_background(path_tmp_cropped_img, os.path.join(args.background_path, img_config["background"] + ".png"), img_config["id"])
 	# print(img_config["final_img_description"])
 	# print("cd ../stable-diffusion ; python3 /home/optionizr/stable-diffusion/scripts/img2img.py --prompt '" + img_config["final_img_description"] + "' --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
-	os.system("cd ../stable-diffusion ; python3 /home/optionizr/stable-diffusion/scripts/img2img.py --ckpt 'model.ckpt' --prompt '" + img_config["final_img_description"] + "' --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
+	os.system("cd ../stable-diffusion ; python3 /home/optionizr/stable-diffusion/scripts/img2img.py --ckpt 'models/ldm/stable-diffusion-v1/model.ckpt' --prompt '" + img_config["final_img_description"] + "' --init-img /home/optionizr/MODnet/" + path_pasted_background_img + " --strength 0.4 --outdir /home/optionizr/outputs --skip_grid")
 	remove_tmp_files(img_config);
 
 # def compute_imgs():
