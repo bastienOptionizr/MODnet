@@ -158,7 +158,7 @@ with open('todo.txt') as f:
 	    	model = line_tab[6]
 
 	    	img_config = {
-	    		"id": 						img_id + "_" + model,
+	    		"id": 						img_id,
 	    		"url": 						img_url,
 	    		"background": 				background_img,
 	    		"email": 					email,
