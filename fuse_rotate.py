@@ -16,6 +16,7 @@ parser.add_argument('--position-y', type=str, help='position y')
 parser.add_argument('--rotation', type=str, help='rotation in degree')
 parser.add_argument('--max-size-width', type=str, help='max size width')
 parser.add_argument('--max-size-height', type=str, help='max size height')
+parser.add_argument('--image-name', type=str, help='name of the output image')
 args = parser.parse_args()
 
 # check input arguments
@@ -83,11 +84,17 @@ else:
 	shutil.rmtree("tmp")
 	os.makedirs("tmp")
 
-tmp_path_foreground = download_img(args.base_image)
-name_foreground = os.path.basename(tmp_path_foreground)
+if args.image_name:
+	name_foreground = args.image_name
+else:
+	name_foreground = os.path.basename(tmp_path_foreground)
 
+
+tmp_path_foreground = download_img(args.base_image)
 tmp_path_background = download_img(args.background_path)
 name_background = os.path.basename(tmp_path_background)
+
+
 
 
 tmp_adjusted_path = adjust_image(tmp_path_foreground, [args.max_size_width, args.max_size_height], name_foreground, args.rotation)
