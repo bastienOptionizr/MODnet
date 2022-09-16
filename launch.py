@@ -21,7 +21,7 @@ def crop_image(path_img, path_background, image_name):
 	im2 = img.crop(img.getbbox())
 	im2.save(cropped_path)
 	adjusted_path = adjust_image(cropped_path, os.path.join(args.background_path, path_background + ".png"), image_name)
-	return cropped_path
+	return adjusted_path
 
 def adjust_image(cropped_img_path, background_img_path, image_name):
 
