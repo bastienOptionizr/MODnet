@@ -30,6 +30,22 @@
 
 ---
 
+script python qui prends qui prends en paramètre, une l'url d'une image de base, l'url d'une image a poser, une position x,y, une rotation en degré ou radian, et une taille max x,y
+- il télécharge l'image de base
+- il resize l'image a poser pour que ca rentre dans la zone de taille max x,y
+- il ajoute l'image a poser sur l'image de base a la position x,y en ajoutant la rotation définis
+ comment lancer =>
+
+
+ python3 fuse_rotate.py --base-image="https://upload.optionizr.com/img/929ec637b7ef8c5697bc8a23deebf5ef.png" --background-path "https://upload.optionizr.com/img/753f5d38aa5d35583ca4714306dcc6df.png" --position-x 100 --position-y 100 --rotation 180 --max-size-width 300 --max-size-height 300
+
+ 1 script python qui prends en paramètre l'url d'une image selfie,
+  - il télécharge l'image,
+  - fait le background remove
+  - fait le crop
+
+  python3 launch2.py --base-image="https://upload.optionizr.com/img/9f319b164dfa4abd486ed10395276a66.jpg"
+
 
 ## Online Application (在线应用)
 
