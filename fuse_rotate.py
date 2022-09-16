@@ -41,12 +41,6 @@ if not args.max_size_height:
     print('Cannot find rotation: {0}'.format(args.max_size_height))
     exit()
 
-print(args.max_size_height)
-print(args.max_size_width)
-print(args.rotation)
-print(args.position_x)
-print(args.position_y)
-
 def adjust_image(cropped_img_path, max_size, image_name, rotation):
 
 	adjusted_path = "adjusted_" + image_name.split(".")[0] + ".png"
